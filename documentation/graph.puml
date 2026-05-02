@@ -1,0 +1,63 @@
+@startuml
+
+!pragma layout smetana
+
+class Account {
+    id : INTEGER PRIMARY KEY
+    login : TEXT
+    user_name : TEXT
+    pwd_hash : TEXT
+}
+
+class Product {
+    id : INTEGER PRIMARY KEY
+    name : TEXT
+}
+
+class ProductVariant {
+    id : INTEGER PRIMARY KEY
+    name : TEXT
+}
+
+class StoreBrand{
+    id : INTEGER PRIMARY KEY
+    name : TEXT
+}
+
+class Store {
+    id : INTEGER PRIMARY KEY
+    brand_id : INTEGER
+    name : TEXT
+    addr : TEXT
+    city : TEXT
+    latitude : REAL
+    longitude : REAL
+}
+
+class Transactions {
+    id INTEGER PRIMARY KEY
+    account_id : INTEGER
+    store_id : INTEGER
+    timestamp : TEXT
+}
+
+class TransactionItem {
+    id : INTEGER PRIMARY KEY
+    transaction_id : INTEGER
+    product_variant_id : INTEGER
+    quantity : REAL
+    price : REAL
+    expire : TEXT
+    remaining : REAL
+}
+
+
+Account::id --- Transactions::account_id
+Store::id --- Transactions::store_id
+StoreBrand::id --- Store::brand_id
+Product <-- ProductVariant
+TransactionItem::product_variant_id --- ProductVariant::id
+Transactions::id --- TransactionItem::transaction_id
+
+
+@enduml
