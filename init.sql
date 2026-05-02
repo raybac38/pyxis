@@ -3,7 +3,7 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS Account (
     id INTEGER PRIMARY KEY,
     login TEXT,
-    user_name TEXT,
+    username TEXT,
     pwd_hash TEXT
 );
 

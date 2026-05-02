@@ -1,21 +1,18 @@
 import express, { json } from 'express';
 import Database from 'better-sqlite3';
 import {DatabaseService} from './service/databaseService.js'
+import { AuthService } from './service/authService.js';
 
 const app = express();
 
 app.use(json());
 
-let databaseService = new DatabaseService();
+const databaseService = new DatabaseService();
 
+const authService = new AuthService(databaseService.getAccountRepository());
 
-let userRepository = databaseService.getUserRepository();
-
-
-
-console.log(userRepository.getUserByLogin("popo"));
-console.log(userRepository.createUser("popo", "raybac", "123"));
-console.log(userRepository.getUserByLogin("popo"));
+app.post('/account/register', (req, res) => authService.register(req, res));
+app.post('/account/login', (req, res) => authService.login(req, res));
 
 
 
@@ -41,3 +38,6 @@ console.log(userRepository.getUserByLogin("popo"));
 //   console.log('Server running');
 // });
 
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});

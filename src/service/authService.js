@@ -1,17 +1,44 @@
 import jwt from "jsonwebtoken";
+import { AccountRepository } from "../repository/accountRepository.js";
+import * as argon2 from "argon2";
 
 class AuthService {
   /**
    * Create an authentificator
-   * @param {BetterSqlite3.Database} database
+   * @param {AccountRepository} accountRepository
    */
-  constructor(database) {
-    this.database = database;
+  constructor(accountRepository) {
+    this.accountRepository = accountRepository;
   }
 
-  register(req, res) {
-    console.log(req);
-    console.log(res);
+  /**
+   * Register a account
+   * Need in body
+   * - login
+   * - username
+   * - password
+   * @param {*} req 
+   * @param {*} res 
+   */
+  async register(req, res) {
+    const body = req.body;
+    const login = body.login;
+    const username = body.username;
+    const password = body.password;
+
+    /// is account existe ?
+    if(this.accountRepository.getByLogin(login) != undefined) {
+      res.status(409).send('LOGIN ALREADY TAKEN');
+      return;
+    }
+
+    const hash = await argon2.hash(password);
+    this.accountRepository.create(login, username, hash);
+
+    const account = this.accountRepository.getByLogin(login);
+    console.log("id " + account.id);
+
+    this.accountRepository.delete(account.id);
   }
 
   login(req, res) {}
@@ -34,11 +61,11 @@ class AuthService {
     }
   }
 
-  generateToken(user) {
+  generateToken(userId, login) {
     return jwt.sign(
       {
-        userId: user.id,
-        login: user.login,
+        userId: userId,
+        login: login,
       },
       process.env.JWT_SECRET,
       {

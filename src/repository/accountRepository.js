@@ -22,11 +22,11 @@ class AccountRepository {
 
     }
 
-    create(login, user_name, pwd_hash) {
+    create(login, username, pwd_hash) {
         return this.database.prepare(`
-            INSERT INTO Account (login, user_name, pwd_hash)
+            INSERT INTO Account (login, username, pwd_hash)
             VALUES (?,?,?)
-            `).run(login, user_name, pwd_hash);
+            `).run(login, username, pwd_hash);
     }
 
     delete(id) {
@@ -35,12 +35,12 @@ class AccountRepository {
             WHERE id == ?`).run(id);
     }
 
-    update(id, login, user_name, pwd_hash) {
+    update(id, login, username, pwd_hash) {
         return this.database.prepare(`
             UPDATE Account
-            SET login=?, user_name=?,pwd_hash=?
+            SET login=?, username=?,pwd_hash=?
             WHERE id == ?
-            `).run(login, user_name, pwd_hash, id);
+            `).run(login, username, pwd_hash, id);
     }
 }
 
