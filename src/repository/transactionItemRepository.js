@@ -37,3 +37,5 @@ class TransactionItemRepository{
     }
 
 }
+
+export {TransactionItemRepository}

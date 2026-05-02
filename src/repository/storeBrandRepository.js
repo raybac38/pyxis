@@ -1,4 +1,4 @@
-class StoreBrand {
+class StoreBrandRepository {
 
     constructor(database){
         this.database = database;
@@ -38,3 +38,5 @@ class StoreBrand {
     }
 
 }
+
+export { StoreBrandRepository}

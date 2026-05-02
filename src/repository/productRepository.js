@@ -42,4 +42,4 @@ class ProductRepository {
     }
 }
 
-export { UserRepository };
+export { ProductRepository };

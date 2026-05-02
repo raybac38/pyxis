@@ -38,3 +38,5 @@ class TransactionsRepository {
             WHERE id == ?`).run(account_id, store_id, timestamp, id)
     }
 }
+
+export { TransactionsRepository}
