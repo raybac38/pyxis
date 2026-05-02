@@ -1,5 +1,5 @@
 import Database from 'better-sqlite3';
-import {UserRepository} from '../../repository/userRepository.js'
+import {AccountRepository} from '../repository/accountRepository.js'
 import fs from "fs";
 
 class DatabaseService {
@@ -7,7 +7,7 @@ class DatabaseService {
     constructor() {
         this.database = new Database('db.sqlite');
         this.init();
-        this.userRepository = new UserRepository(this.database);
+        this.userRepository = new AccountRepository(this.database);
     }
 
     init() {

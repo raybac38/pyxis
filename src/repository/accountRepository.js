@@ -1,4 +1,4 @@
-class UserRepository {
+class AccountRepository {
 
     /**
      * 
@@ -44,4 +44,4 @@ class UserRepository {
     }
 }
 
-export { UserRepository };
+export { AccountRepository };
