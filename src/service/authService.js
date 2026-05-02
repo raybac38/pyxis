@@ -17,8 +17,8 @@ class AuthService {
    * - login
    * - username
    * - password
-   * @param {*} req 
-   * @param {*} res 
+   * @param {*} req
+   * @param {*} res
    */
   async register(req, res) {
     const body = req.body;
@@ -27,8 +27,8 @@ class AuthService {
     const password = body.password;
 
     /// is account existe ?
-    if(this.accountRepository.getByLogin(login) != undefined) {
-      res.status(409).send('LOGIN ALREADY TAKEN');
+    if (this.accountRepository.getByLogin(login) != undefined) {
+      res.status(409).send("LOGIN ALREADY TAKEN");
       return;
     }
 
@@ -36,12 +36,49 @@ class AuthService {
     this.accountRepository.create(login, username, hash);
 
     const account = this.accountRepository.getByLogin(login);
-    console.log("id " + account.id);
 
-    this.accountRepository.delete(account.id);
+    const token = this.generateToken(account.id, login);
+
+    res
+      .status(201)
+      .json({
+        token: token,
+        username: username,
+        userId: account.id,
+        login: login,
+      });
   }
 
-  login(req, res) {}
+  /**
+   * Login, and get token
+   * @param {*} req
+   * @param {*} res
+   */
+  async login(req, res) {
+    const body = req.body;
+    const login = body.login;
+    const password = body.password;
+
+    const account = this.accountRepository.getByLogin(login);
+    if(account == undefined){
+      res.status(401);  /// account not found
+      return;
+    }
+
+    const hash = await account.pwd_hash;
+    if(!argon2.verify(hash, password)){
+      res.status(401);  /// wrong password
+      return;
+    }
+    const token = this.generateToken(account.id, login);
+
+    res.status(201).json({
+      token: token,
+      username : account.username,
+      userId : account.id,
+      login : login
+    })
+  }
 
   auth(req, res, next) {
     const authHeader = req.headers.authorization;
@@ -54,7 +91,7 @@ class AuthService {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;   /// put id of token into user id
+      req.user = decoded; /// put id of token into user id
       next();
     } catch (err) {
       return res.status(403).json({ error: "Token invalide" });
@@ -75,5 +112,4 @@ class AuthService {
   }
 }
 
-
-export {AuthService}
+export { AuthService };
