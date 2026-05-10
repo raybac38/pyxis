@@ -2,39 +2,39 @@ class ProductRepository {
 
     /**
      * 
-     * @param {BetterSqlite3.Database} database 
+     * @param {BetterSqlite3.tx} tx 
      */
-    constructor(database) {
-        this.database = database;
+    constructor(tx) {
+        this.tx = tx;
     }
 
     getByName(name) {
-        return this.database.prepare(`
+        return this.tx.prepare(`
             SELECT * FROM Product
             WHERE name == ?`).get(name);
     }
 
     getById(id) {
-        return this.database.prepare(`
+        return this.tx.prepare(`
             SELECT * FROM Product
             WHERE id == ?`).get(id);
     }
 
     create(name) {
-        return this.database.prepare(`
+        return this.tx.prepare(`
             INSERT INTO Product (name)
             VALUES (?)
             `).run(name);
     }
 
     delete(id) {
-        return this.database.prepare(`
+        return this.tx.prepare(`
             DELETE FROM Product
             WHERE id == ?`).run(id);
     }
 
     update(id, name) {
-        return this.database.prepare(`
+        return this.tx.prepare(`
             UPDATE Product
             SET name=?
             WHERE id == ?
