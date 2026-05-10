@@ -61,13 +61,13 @@ class AuthService {
 
     const account = this.accountRepository.getByLogin(login);
     if(account == undefined){
-      res.status(401);  /// account not found
+      res.status(401).end();  /// account not found
       return;
     }
 
     const hash = await account.pwd_hash;
     if(!argon2.verify(hash, password)){
-      res.status(401);  /// wrong password
+      res.status(401).end();  /// wrong password
       return;
     }
     const token = this.generateToken(account.id, login);
@@ -109,6 +109,11 @@ class AuthService {
         expiresIn: "1h",
       },
     );
+  }
+
+  info(req, res) {
+    
+    return res.status(200).json(this.accountRepository.getById(req.user.userId));
   }
 }
 

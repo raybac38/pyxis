@@ -26,7 +26,7 @@ class TransactionItemRepository{
     update(id, transaction_id, product_variant_id, quantity, price, expire, remaining){
         return this.database.prepare(`
             UPDATE TransactionItem
-            SET reansaction_id=?, product_variant_id=?, quantity=?, price=?, expire=?, remaining=?
+            SET transaction_id=?, product_variant_id=?, quantity=?, price=?, expire=?, remaining=?
             WHERE id=?`).run(transaction_id, product_variant_id, quantity, price, expire, remaining, id)
     }
 

@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Transactions (
     id INTEGER PRIMARY KEY,
     account_id INTEGER,
     store_id INTEGER,
-    timestamp TEXT,
+    timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (account_id) REFERENCES Account(id)
         ON DELETE CASCADE,
@@ -62,6 +62,29 @@ CREATE TABLE IF NOT EXISTS TransactionItem (
     remaining REAL,
 
     FOREIGN KEY (transaction_id) REFERENCES Transactions(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (product_variant_id) REFERENCES ProductVariant(id)
+        ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS ShoppingList (
+    id INTEGER PRIMARY KEY,
+    account_id INTEGER,
+    name TEXT DEFAULT 'Courses',
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (account_id) REFERENCES Account(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS ShoppingListItem(
+    id INTEGER PRIMARY KEY,
+    shopping_list_id INTEGER,
+    product_variant_id INTEGER,
+    quantity REAL,
+
+    FOREIGN KEY (shopping_list_id) REFERENCES Transactions(id)
         ON DELETE CASCADE,
 
     FOREIGN KEY (product_variant_id) REFERENCES ProductVariant(id)
